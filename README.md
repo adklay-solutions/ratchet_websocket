@@ -2,8 +2,9 @@
 
 ## installation
 first you need to clone it into your app :  
+***You need to be in the root of your app.***
 ```
-git clone https://github.com/adklay-solutions/ratchet_websocket.git
+git clone git@github.com:adklay-solutions/ratchet_websocket .
 ```
 
 Then update composer dependencies
@@ -11,7 +12,7 @@ Then update composer dependencies
 composer update
 ```
 
-Change the app name (```MyApp```) in the folowwing file :
+Change the app name (```MyApp```) in the folowwing file by your app name :
 
 - ***composer.json***
 
@@ -21,7 +22,7 @@ this will look like this :
 {
     "autoload": {
         "psr-4": {
-            "MyApp\\": "src"
+            "[MyApp\\]": "src"
         }
     },
     "require": {
@@ -44,6 +45,12 @@ Same change :
 
 ```
 use MyApp\Chat;
+```
+
+Dont forget to update this url in the ```websocket-test.php``` file :
+
+```
+var conn = new WebSocket('ws://localhost:8080');
 ```
 
 ## run 

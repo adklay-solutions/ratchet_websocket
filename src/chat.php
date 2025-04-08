@@ -4,22 +4,34 @@ namespace MyApp;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
-class Chat implements MessageComponentInterface {
+class Chat implements MessageComponentInterface
+{
     protected $clients;
-    public function __construct() {
+
+    // SplObjectStorage permet de stocker nos sessions
+    public function __construct()
+    {
         $this->clients = new \SplObjectStorage;
     }
 
-    public function onOpen(ConnectionInterface $conn) {
+    public function onOpen(ConnectionInterface $conn)
+    {
         // stocker la nouvelle connexion
         $this->clients->attach($conn);
         echo "Nouvelle connexion ({$conn->resourceId})\n";
     }
 
-    public function onMessage(ConnectionInterface $from, $msg) {
+    public function onMessage(ConnectionInterface $from, $msg)
+    {
         $numRecv = count($this->clients) - 1;
-        echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
-            , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
+        echo sprintf(
+            'Connection %d sending message "%s" to %d other connection%s' . "\n"
+            ,
+            $from->resourceId,
+            $msg,
+            $numRecv,
+            $numRecv == 1 ? '' : 's'
+        );
 
         foreach ($this->clients as $client) {
             if ($from !== $client) {
@@ -28,13 +40,15 @@ class Chat implements MessageComponentInterface {
         }
     }
 
-    public function onClose(ConnectionInterface $conn){
+    public function onClose(ConnectionInterface $conn)
+    {
         $this->clients->detach($conn);
 
         echo "Connexion {$conn->resourceId} s'est déconnecté\n";
     }
 
-    public function onError(ConnectionInterface $conn, \Exception $e) {
+    public function onError(ConnectionInterface $conn, \Exception $e)
+    {
         echo "Une erreur est survenue {$e->getMessage()}\n";
 
         $conn->close();
